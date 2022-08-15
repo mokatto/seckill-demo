@@ -1,0 +1,96 @@
+spring:
+  #rabbitmq相关配置
+  rabbitmq:
+    host: 192.168.135.139
+    username: guest
+    password: guest
+    virtual-host: /
+    port: 5672
+    listener:
+      simple:
+        #消费者最小数量
+        concurrency: 10
+        #消费者最大数量
+        max-concurrency: 10
+        #限制消费者每次只处理一条消息，处理完再继续下一条消息
+        prefetch: 1
+        #启动时是都默认启动容器，默认为true
+        auto-startup: true
+        #被拒绝时是否重新进入队列
+        default-requeue-rejected: true
+    template:
+      retry:
+        #发布重试，默认false
+        enabled: true
+        #重试时间，默认1000ms
+        initial-interval: 1000ms
+        #重试最大次数，默认为3
+        max-attempts: 3
+        #重试最大时间间隔10000ms，默认
+        max-interval: 10000ms
+        #重试的间隔乘数，如为2.0，则第一次重试等10s，第二次等20s，第三次40s
+        multiplier: 1
+  #静态资源处理
+  resources:
+    #启动默认静态资源处理，默认启用
+    add-mappings: true
+    cache:
+      cachecontrol:
+        #缓存响应时间，单位秒
+        max-age: 3600
+    chain:
+      #资源链启动缓存，默认启动
+      cache: true
+      #启用资源链，默认禁用
+      enabled: true
+      #启用压缩资源(gzip,brotli)解析，默认禁用
+      compressed: true
+      #启用h5应用缓存，默认禁用
+      html-application-cache: true
+    #静态资源路径
+    static-locations: classpath:/static/
+
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    #time-zone: GMT+8
+  thymeleaf:
+    #thymeleaf缓存
+    cache: false
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/seckill?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
+    #url: jdbc:mysql://localhost:3306/seckill?useUnicode=true&characterEncoding=UTF-8&serverTimezone=GMT%2B8
+    #url: jdbc:mysql://localhost:3306/seckill?useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC
+    #url: jdbc:mysql://localhost:3306/seckill?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai&useSSL=false
+    username: "yang"
+    password: "yang"
+    #type: com.zaxxer.hikari.HikariDataSource
+    hikari:
+      pool-name: DateHikariCP
+      minimum-idle: 5
+      idle-timeout: 1800000
+      maximum-pool-size: 10
+      auto-commit: true
+      max-lifetime: 1800000
+      connection-timeout: 30000
+      connection-test-query: SELECT 1
+
+  redis:
+    host: 192.168.135.138 #服务器地址
+    port: 6379 #端口
+    database: 0 #数据库
+    timeout: 1000000ms #超时时间
+    lettuce:
+      pool:
+        max-active: 8 #最大连接数，默认为8
+        max-wait: 10000ms #最大连接阻塞等待时间，默认-1
+        max-idle: 200 #最大空闲连接，默认8
+        min-idle: 0 #最小空闲连接，默认0
+
+mybatis-plus:
+  mapper-locations: classpath*:/mapper/*Mapper.xml
+  type-aliases-package: com.xxxx.seckill.pojo
+
+logging:
+  level:
+    com.xxxx.seckill.mapper: debug
